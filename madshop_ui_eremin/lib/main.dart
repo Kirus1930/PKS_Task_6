@@ -24,89 +24,9 @@ class NotesPage extends StatefulWidget {
 }
 
 class _NotesPageState extends State<NotesPage> {
-  final List<Note> _notes = [
-    Note(id: '1', title: 'Пример', body: 'Это пример заметки'),
-  ];
-
-  final TextEditingController _searchController = TextEditingController();
-  List<Note> _filteredNotes = [];
-  bool _isSearching = false;
-
   @override
-  void initState() {
-    super.initState();
-    _filteredNotes = _notes;
-    _searchController.addListener(_filterNotes);
-  }
-
-  @override
-  void dispose() {
-    _searchController.dispose();
+  void CheckInput() {
     super.dispose();
-  }
-
-  void _filterNotes() {
-    final query = _searchController.text.toLowerCase();
-    setState(() {
-      if (query.isEmpty) {
-        _filteredNotes = _notes;
-      } else {
-        _filteredNotes = _notes
-            .where((note) => note.title.toLowerCase().contains(query))
-            .toList();
-      }
-    });
-  }
-
-  void _startSearch() {
-    setState(() {
-      _isSearching = true;
-    });
-  }
-
-  void _stopSearch() {
-    setState(() {
-      _isSearching = false;
-      _searchController.clear();
-      _filteredNotes = _notes;
-    });
-  }
-
-  Future<void> _addNote() async {
-    final newNote = await Navigator.push<Note>(
-      context,
-      MaterialPageRoute(builder: (_) => EditNotePage()),
-    );
-    if (newNote != null) {
-      setState(() {
-        _notes.add(newNote);
-        _filterNotes(); // Обновляем фильтрацию после добавления
-      });
-    }
-  }
-
-  Future<void> _edit(Note note) async {
-    final updated = await Navigator.push<Note>(
-      context,
-      MaterialPageRoute(builder: (_) => EditNotePage(existing: note)),
-    );
-    if (updated != null) {
-      setState(() {
-        final i = _notes.indexWhere((n) => n.id == updated.id);
-        if (i != -1) _notes[i] = updated;
-        _filterNotes(); // Обновляем фильтрацию после редактирования
-      });
-    }
-  }
-
-  void _delete(Note note) {
-    setState(() {
-      _notes.removeWhere((n) => n.id == note.id);
-      _filterNotes(); // Обновляем фильтрацию после удаления
-    });
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Заметка удалена')));
   }
 
   @override
@@ -117,22 +37,6 @@ class _NotesPageState extends State<NotesPage> {
           'Create Account',
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
-        actions: [
-          if (_isSearching)
-            IconButton(
-              icon: const Icon(Icons.close, color: Colors.white),
-              onPressed: _stopSearch,
-            )
-          else
-            IconButton(
-              icon: const Icon(Icons.search, color: Colors.white),
-              onPressed: _startSearch,
-            ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _addNote,
-        child: const Icon(Icons.add),
       ),
       body: Center(
         child: Column(
