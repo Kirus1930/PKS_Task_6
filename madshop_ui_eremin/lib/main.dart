@@ -113,26 +113,10 @@ class _NotesPageState extends State<NotesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: _isSearching
-            ? TextField(
-                controller: _searchController,
-                autofocus: true,
-                style: const TextStyle(color: Colors.white),
-                decoration: const InputDecoration(
-                  hintText: 'Поиск по заголовку...',
-                  hintStyle: TextStyle(color: Colors.white70),
-                  border: InputBorder.none,
-                ),
-              )
-            : Text(
-                'Практика 6: Верстка приложения по готовому дизайну',
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
-        centerTitle: true,
-        backgroundColor: Colors.deepPurpleAccent,
+        title: Text(
+          'Create Account',
+          style: TextStyle(fontWeight: FontWeight.w600),
+        ),
         actions: [
           if (_isSearching)
             IconButton(
@@ -150,91 +134,44 @@ class _NotesPageState extends State<NotesPage> {
         onPressed: _addNote,
         child: const Icon(Icons.add),
       ),
-      body: _filteredNotes.isEmpty
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    _searchController.text.isEmpty
-                        ? Icons.note_add
-                        : Icons.search_off,
-                    size: 64,
-                    color: Colors.grey.shade400,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    _searchController.text.isEmpty
-                        ? 'Пока нет заметок. Нажмите +'
-                        : 'Заметки не найдены',
-                    style: TextStyle(
-                      fontStyle: FontStyle.italic,
-                      fontSize: 20,
-                      color: Colors.grey.shade600,
-                    ),
-                  ),
-                ],
-              ),
-            )
-          : ListView.builder(
-              itemCount: _filteredNotes.length,
-              itemBuilder: (context, i) {
-                final note = _filteredNotes[i];
-                return Container(
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade300, width: 1),
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color.fromARGB(255, 243, 240, 240),
-                        blurRadius: 2,
-                        offset: const Offset(0, 1),
-                      ),
-                    ],
-                  ),
-                  child: Dismissible(
-                    key: ValueKey(note.id),
-                    direction: DismissDirection.endToStart,
-                    background: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      alignment: Alignment.centerRight,
-                      padding: const EdgeInsets.only(right: 20),
-                      child: const Icon(Icons.delete, color: Colors.white),
-                    ),
-                    onDismissed: (direction) {
-                      _delete(note);
-                    },
-                    child: ListTile(
-                      title: Text(
-                        note.title.isEmpty ? 'Без названия' : note.title,
-                        style: const TextStyle(fontWeight: FontWeight.w500),
-                      ),
-                      subtitle: Text(
-                        note.body,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      onTap: () => _edit(note),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete_outline),
-                        onPressed: () => _delete(note),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                    ),
-                  ),
-                );
-              },
+      body: Center(
+        child: Column(
+          children: [
+            TextFormField(
+              initialValue: _email,
+              validator: (v) =>
+                  (v == null || v.trim().isEmpty) ? 'Email' : null,
             ),
+            TextFormField(
+              initialValue: _password,
+              validator: (v) =>
+                  (v == null || v.trim().isEmpty) ? 'Password' : null,
+            ),
+            TextFormField(
+              initialValue: _phone,
+              validator: (v) =>
+                  (v == null || v.trim().isEmpty) ? 'Your number' : null,
+            ),
+            GestureDetector(
+              onTap: CheckInput,
+              child: Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  color: Colors.blueAccent,
+                ),
+                child: Center(
+                  child: Text(
+                    "Done",
+                    style: TextStyle(fontSize: 12, color: Colors.white),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
