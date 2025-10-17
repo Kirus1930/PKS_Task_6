@@ -1,122 +1,240 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(const SimpleNotesApp());
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class SimpleNotesApp extends StatelessWidget {
+  const SimpleNotesApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    return const MaterialApp(
+      title: 'Практика 6',
+      // theme: ThemeData(useMaterial3: true),
+      debugShowCheckedModeBanner: false,
+      home: NotesPage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class NotesPage extends StatefulWidget {
+  const NotesPage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<NotesPage> createState() => _NotesPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _NotesPageState extends State<NotesPage> {
+  final List<Note> _notes = [
+    Note(id: '1', title: 'Пример', body: 'Это пример заметки'),
+  ];
 
-  void _incrementCounter() {
+  final TextEditingController _searchController = TextEditingController();
+  List<Note> _filteredNotes = [];
+  bool _isSearching = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _filteredNotes = _notes;
+    _searchController.addListener(_filterNotes);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _filterNotes() {
+    final query = _searchController.text.toLowerCase();
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      if (query.isEmpty) {
+        _filteredNotes = _notes;
+      } else {
+        _filteredNotes = _notes
+            .where((note) => note.title.toLowerCase().contains(query))
+            .toList();
+      }
     });
+  }
+
+  void _startSearch() {
+    setState(() {
+      _isSearching = true;
+    });
+  }
+
+  void _stopSearch() {
+    setState(() {
+      _isSearching = false;
+      _searchController.clear();
+      _filteredNotes = _notes;
+    });
+  }
+
+  Future<void> _addNote() async {
+    final newNote = await Navigator.push<Note>(
+      context,
+      MaterialPageRoute(builder: (_) => EditNotePage()),
+    );
+    if (newNote != null) {
+      setState(() {
+        _notes.add(newNote);
+        _filterNotes(); // Обновляем фильтрацию после добавления
+      });
+    }
+  }
+
+  Future<void> _edit(Note note) async {
+    final updated = await Navigator.push<Note>(
+      context,
+      MaterialPageRoute(builder: (_) => EditNotePage(existing: note)),
+    );
+    if (updated != null) {
+      setState(() {
+        final i = _notes.indexWhere((n) => n.id == updated.id);
+        if (i != -1) _notes[i] = updated;
+        _filterNotes(); // Обновляем фильтрацию после редактирования
+      });
+    }
+  }
+
+  void _delete(Note note) {
+    setState(() {
+      _notes.removeWhere((n) => n.id == note.id);
+      _filterNotes(); // Обновляем фильтрацию после удаления
+    });
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Заметка удалена')));
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+        title: _isSearching
+            ? TextField(
+                controller: _searchController,
+                autofocus: true,
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(
+                  hintText: 'Поиск по заголовку...',
+                  hintStyle: TextStyle(color: Colors.white70),
+                  border: InputBorder.none,
+                ),
+              )
+            : Text(
+                'Практика 6: Верстка приложения по готовому дизайну',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+        centerTitle: true,
+        backgroundColor: Colors.deepPurpleAccent,
+        actions: [
+          if (_isSearching)
+            IconButton(
+              icon: const Icon(Icons.close, color: Colors.white),
+              onPressed: _stopSearch,
+            )
+          else
+            IconButton(
+              icon: const Icon(Icons.search, color: Colors.white),
+              onPressed: _startSearch,
             ),
-          ],
-        ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
+        onPressed: _addNote,
         child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
+      body: _filteredNotes.isEmpty
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    _searchController.text.isEmpty
+                        ? Icons.note_add
+                        : Icons.search_off,
+                    size: 64,
+                    color: Colors.grey.shade400,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    _searchController.text.isEmpty
+                        ? 'Пока нет заметок. Нажмите +'
+                        : 'Заметки не найдены',
+                    style: TextStyle(
+                      fontStyle: FontStyle.italic,
+                      fontSize: 20,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          : ListView.builder(
+              itemCount: _filteredNotes.length,
+              itemBuilder: (context, i) {
+                final note = _filteredNotes[i];
+                return Container(
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey.shade300, width: 1),
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color.fromARGB(255, 243, 240, 240),
+                        blurRadius: 2,
+                        offset: const Offset(0, 1),
+                      ),
+                    ],
+                  ),
+                  child: Dismissible(
+                    key: ValueKey(note.id),
+                    direction: DismissDirection.endToStart,
+                    background: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      alignment: Alignment.centerRight,
+                      padding: const EdgeInsets.only(right: 20),
+                      child: const Icon(Icons.delete, color: Colors.white),
+                    ),
+                    onDismissed: (direction) {
+                      _delete(note);
+                    },
+                    child: ListTile(
+                      title: Text(
+                        note.title.isEmpty ? 'Без названия' : note.title,
+                        style: const TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                      subtitle: Text(
+                        note.body,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      onTap: () => _edit(note),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete_outline),
+                        onPressed: () => _delete(note),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
     );
   }
 }
