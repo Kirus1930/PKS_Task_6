@@ -77,7 +77,7 @@ class _ShopScreenState extends State<ShopScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Shop'),
-        backgroundColor: AppColors.white,
+        backgroundColor: Colors.white,
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
