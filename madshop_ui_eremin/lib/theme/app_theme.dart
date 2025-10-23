@@ -24,9 +24,9 @@ class AppTheme {
         iconTheme: IconThemeData(color: Colors.black),
       ),
       textTheme: const TextTheme(
-        headline6: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-        bodyText2: TextStyle(fontSize: 14),
-      ),
+          // headline6: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+          // bodyText2: TextStyle(fontSize: 14),
+          ),
     );
   }
 }
