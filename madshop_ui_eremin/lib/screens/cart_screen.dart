@@ -1,148 +1,99 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../models/app_state.dart';
 
-class CartScreen extends StatefulWidget {
-  const CartScreen({super.key});
-
-  @override
-  State<CartScreen> createState() => _CartScreenState();
-}
-
-class _CartScreenState extends State<CartScreen> {
-  final List<Map<String, dynamic>> _cartItems = [
-    {'id': 1, 'name': 'Product 1', 'price': 29.99, 'quantity': 1},
-    {'id': 3, 'name': 'Product 3', 'price': 19.99, 'quantity': 2},
-    {'id': 4, 'name': 'Product 4', 'price': 49.99, 'quantity': 1},
-  ];
-
-  void _updateQuantity(int productId, int change) {
-    setState(() {
-      final product = _cartItems.firstWhere((p) => p['id'] == productId);
-      final newQuantity = product['quantity'] + change;
-      if (newQuantity > 0) {
-        product['quantity'] = newQuantity;
-      } else {
-        _cartItems.removeWhere((p) => p['id'] == productId);
-      }
-    });
-  }
-
-  double get _totalPrice {
-    return _cartItems.fold(0, (sum, item) {
-      return sum + (item['price'] * item['quantity']);
-    });
-  }
-
-  int get _totalItems {
-    return _cartItems.fold(0, (sum, item) => sum + item['quantity']);
-  }
+class CartScreen extends StatelessWidget {
+  static const routeName = '/cart';
+  const CartScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final appState = Provider.of<AppState>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cart ($_totalItems)'),
-        backgroundColor: AppColors.white,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+        title: Row(
+          children: [
+            const Text('Cart'),
+            const SizedBox(width: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(12)),
+              child: Text('${appState.totalItemsInCart} items'),
+            )
+          ],
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: _cartItems.length,
-              itemBuilder: (context, index) {
-                final item = _cartItems[index];
-                return Card(
-                  margin: const EdgeInsets.only(bottom: 16),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 60,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: AppColors.grey,
-                            borderRadius: BorderRadius.circular(8),
+      body: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                itemCount: appState.cart.length,
+                itemBuilder: (ctx, i) {
+                  final item = appState.cart[i];
+                  return Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Image.asset(item.product.image,
+                              width: 64, height: 64),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(item.product.title,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold)),
+                                Text(
+                                    '\$${item.product.price.toStringAsFixed(2)}')
+                              ],
+                            ),
                           ),
-                          child: const Icon(Icons.image, color: AppColors.textSecondary),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          Row(
                             children: [
-                              Text(
-                                item['name'],
-                                style: AppTextStyles.subtitle,
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                '\$${item['price']}',
-                                style: AppTextStyles.body.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primary,
-                                ),
-                              ),
+                              IconButton(
+                                  onPressed: () =>
+                                      appState.changeQty(item.product.id, -1),
+                                  icon: const Icon(Icons.remove)),
+                              Text('${item.qty}',
+                                  style: const TextStyle(fontSize: 16)),
+                              IconButton(
+                                  onPressed: () =>
+                                      appState.changeQty(item.product.id, 1),
+                                  icon: const Icon(Icons.add)),
                             ],
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.remove),
-                              onPressed: () => _updateQuantity(item['id'], -1),
-                            ),
-                            Text(
-                              item['quantity'].toString(),
-                              style: AppTextStyles.subtitle,
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.add),
-                              onPressed: () => _updateQuantity(item['id'], 1),
-                            ),
-                          ],
-                        ),
-                      ],
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
-          ),
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: AppColors.white,
-              border: Border.top: BorderSide(color: AppColors.grey),
-            ),
-            child: Row(
+            const SizedBox(height: 12),
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Total: \$$_totalPrice',
-                  style: AppTextStyles.title,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('Total',
+                        style: TextStyle(fontSize: 12, color: Colors.grey)),
+                    Text('\$${appState.totalAmount.toStringAsFixed(2)}',
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold)),
+                  ],
                 ),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                  ),
-                  child: Text(
-                    'Checkout',
-                    style: AppTextStyles.button,
-                  ),
-                ),
+                ElevatedButton(onPressed: () {}, child: const Text('Checkout'))
               ],
-            ),
-          ),
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
