@@ -1,92 +1,28 @@
 import 'package:flutter/material.dart';
-import 'shop_screen.dart';
 
-class PasswordScreen extends StatefulWidget {
-  const PasswordScreen({super.key});
-
-  @override
-  State<PasswordScreen> createState() => _PasswordScreenState();
-}
-
-class _PasswordScreenState extends State<PasswordScreen> {
-  final TextEditingController _passwordController = TextEditingController();
-  bool _obscureText = true;
+class PasswordScreen extends StatelessWidget {
+  static const routeName = '/password';
+  const PasswordScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final passController = TextEditingController();
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Password'),
-        backgroundColor: AppColors.white,
-      ),
+      appBar: AppBar(title: const Text('Password')),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 40),
-            Text(
-              'Password',
-              style: AppTextStyles.title,
-            ),
-            const SizedBox(height: 10),
-            Text(
-              'Enter your password',
-              style: AppTextStyles.body,
-            ),
-            const SizedBox(height: 40),
-            Container(
-              decoration: BoxDecoration(
-                color: AppColors.white,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: AppColors.grey),
-              ),
-              child: TextField(
-                controller: _passwordController,
-                obscureText: _obscureText,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: 'Password',
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _obscureText ? Icons.visibility : Icons.visibility_off,
-                      color: AppColors.textSecondary,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _obscureText = !_obscureText;
-                      });
-                    },
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 30),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => const ShopScreen()),
-                    (route) => false,
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: Text(
-                  'Login',
-                  style: AppTextStyles.button,
-                ),
-              ),
-            ),
+            TextField(
+                controller: passController,
+                decoration: const InputDecoration(labelText: 'Password'),
+                obscureText: true),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () =>
+                  Navigator.of(context).pushReplacementNamed('/shop'),
+              child: const Text('Enter'),
+            )
           ],
         ),
       ),
