@@ -1,115 +1,93 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../models/product.dart';
+import '../models/app_state.dart';
 
 class ProductCard extends StatelessWidget {
-  final String name;
-  final String price;
-  final bool isFavorite;
-  final bool isInCart;
-  final VoidCallback? onFavoriteTap;
-  final VoidCallback? onCartTap;
-
-  const ProductCard({
-    super.key,
-    required this.name,
-    required this.price,
-    this.isFavorite = false,
-    this.isInCart = false,
-    this.onFavoriteTap,
-    this.onCartTap,
-  });
+  final Product product;
+  const ProductCard({Key? key, required this.product}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Stack(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                height: 120,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: AppColors.grey,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(12),
-                    topRight: Radius.circular(12),
+    final appState = Provider.of<AppState>(context, listen: false);
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 6)],
+        ),
+        child: Stack(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius:
+                        const BorderRadius.vertical(top: Radius.circular(12)),
+                    child: product.image.isNotEmpty
+                        ? Image.asset(product.image, fit: BoxFit.cover)
+                        : Container(color: Colors.grey[300]),
                   ),
                 ),
-                child: const Icon(
-                  Icons.image,
-                  size: 50,
-                  color: AppColors.textSecondary,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      name,
-                      style: AppTextStyles.subtitle,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '\$$price',
-                      style: AppTextStyles.body.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          Positioned(
-            top: 8,
-            right: 8,
-            child: GestureDetector(
-              onTap: onFavoriteTap,
-              child: Container(
-                padding: const EdgeInsets.all(4),
-                decoration: const BoxDecoration(
-                  color: AppColors.white,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.favorite,
-                  color: isFavorite ? AppColors.red : AppColors.white,
-                  size: 20,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(product.title,
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 4),
+                      Text(product.subtitle,
+                          style: const TextStyle(fontSize: 12)),
+                      const SizedBox(height: 6),
+                      Text('\$${product.price.toStringAsFixed(2)}',
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                )
+              ],
+            ),
+            // Heart top-left
+            Positioned(
+              top: 8,
+              left: 8,
+              child: GestureDetector(
+                onTap: () => appState.toggleFavorite(product.id),
+                child: Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                      color: Colors.black38, shape: BoxShape.circle),
+                  child: Icon(
+                    Icons.favorite,
+                    size: 18,
+                    color: product.favorite ? Colors.red : Colors.white,
+                  ),
                 ),
               ),
             ),
-          ),
-          if (onCartTap != null)
+            // Bag bottom-left
             Positioned(
-              bottom: 8,
-              right: 8,
+              bottom: 48,
+              left: 8,
               child: GestureDetector(
-                onTap: onCartTap,
+                onTap: () => appState.toggleCart(product.id),
                 child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: const BoxDecoration(
-                    color: AppColors.white,
-                    shape: BoxShape.circle,
-                  ),
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                      color: Colors.black38, shape: BoxShape.circle),
                   child: Icon(
                     Icons.shopping_bag,
-                    color: isInCart ? AppColors.black : AppColors.white,
-                    size: 20,
+                    size: 18,
+                    color: product.inCart ? Colors.black : Colors.white,
                   ),
                 ),
               ),
             ),
-        ],
+          ],
+        ),
       ),
     );
   }
