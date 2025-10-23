@@ -1,47 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../models/app_state.dart';
 import '../widgets/product_card.dart';
 
 class FavoritesScreen extends StatelessWidget {
-  const FavoritesScreen({super.key});
+  static const routeName = '/favorites';
+  const FavoritesScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> favoriteProducts = [
-      {'id': 1, 'name': 'Favorite Product 1', 'price': '29.99'},
-      {'id': 2, 'name': 'Favorite Product 2', 'price': '39.99'},
-      {'id': 3, 'name': 'Favorite Product 3', 'price': '49.99'},
-      {'id': 4, 'name': 'Favorite Product 4', 'price': '19.99'},
-    ];
-
+    final appState = Provider.of<AppState>(context);
+    final favs = appState.favorites;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Favorites'),
-        backgroundColor: AppColors.white,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-      body: GridView.builder(
-        padding: const EdgeInsets.all(16),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
-          childAspectRatio: 0.7,
-        ),
-        itemCount: favoriteProducts.length,
-        itemBuilder: (context, index) {
-          final product = favoriteProducts[index];
-          return ProductCard(
-            name: product['name'],
-            price: product['price'],
-            isFavorite: true,
-            isInCart: false,
-          );
-        },
+      appBar: AppBar(title: const Text('Favorites')),
+      body: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: favs.isEmpty
+            ? const Center(child: Text('No favorites yet'))
+            : GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    childAspectRatio: .72),
+                itemCount: favs.length,
+                itemBuilder: (ctx, i) => ProductCard(product: favs[i]),
+              ),
       ),
     );
   }
