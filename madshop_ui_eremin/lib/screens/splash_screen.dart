@@ -1,50 +1,38 @@
 import 'package:flutter/material.dart';
-import 'create_account_screen.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  static const routeName = '/';
+  const SplashScreen({Key? key}) : super(key: key);
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  _SplashScreenState createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _navigateToCreateAccount();
-  }
-
-  void _navigateToCreateAccount() {
-    Future.delayed(const Duration(seconds: 2), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const CreateAccountScreen()),
-      );
+    // show logo then navigate
+    Future.delayed(const Duration(milliseconds: 700), () {
+      Navigator.of(context).pushReplacementNamed('/create');
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primary,
+      backgroundColor:
+          Colors.white, // Use background color from Figma if specified
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
-              Icons.shopping_bag,
-              size: 80,
-              color: AppColors.white,
-            ),
-            const SizedBox(height: 20),
-            Text(
-              'MAD Shopping',
-              style: AppTextStyles.title.copyWith(
-                color: AppColors.white,
-                fontSize: 28,
-              ),
-            ),
+            // --- FIGMA ASSET MARKER ---
+            // Replace 'assets/images/logo.png' with the exported logo from Figma
+            Image.asset('assets/images/logo.png', width: 160, height: 160),
+            const SizedBox(height: 12),
+            const Text('01 Start',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           ],
         ),
       ),
