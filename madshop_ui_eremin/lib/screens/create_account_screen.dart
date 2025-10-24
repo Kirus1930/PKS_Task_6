@@ -36,8 +36,6 @@ class CreateAccountScreen extends StatelessWidget {
                       // and replace Text('🇷🇺') below with Image.asset('assets/images/flag_ru.png', width:20,height:14)
                       const Text('🇷🇺', style: TextStyle(fontSize: 20)),
                       const SizedBox(width: 6),
-                      const Text('7', style: TextStyle(fontSize: 14)),
-                      const SizedBox(width: 8),
                       const Text('|', style: TextStyle(color: Colors.grey)),
                     ],
                   ),
