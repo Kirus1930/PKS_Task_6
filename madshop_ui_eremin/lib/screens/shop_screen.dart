@@ -28,10 +28,10 @@ class ShopScreen extends StatelessWidget {
         actions: [
           IconButton(
               onPressed: () => Navigator.of(context).pushNamed('/favorites'),
-              icon: const Icon(Icons.favorite)),
+              icon: Image.asset('assets/images/heart.png')),
           IconButton(
               onPressed: () => Navigator.of(context).pushNamed('/cart'),
-              icon: const Icon(Icons.shopping_cart)),
+              icon: Image.asset('assets/images/bag.png'))
         ],
       ),
       body: Padding(
