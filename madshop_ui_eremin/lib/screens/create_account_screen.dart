@@ -20,27 +20,21 @@ class CreateAccountScreen extends StatelessWidget {
           children: [
             const SizedBox(height: 24),
             TextFormField(
-              keyboardType: TextInputType.visiblePassword,
-              decoration: InputDecoration(
-                border: const OutlineInputBorder(),
-                prefixIcon: Padding(
-                  padding: const EdgeInsets.only(left: 8.0, right: 6.0),
-                ),
-              ),
-              validator: (v) =>
-                  (v == null || v.trim().isEmpty) ? 'Password' : null,
-            ),
-            const SizedBox(height: 24),
-            TextFormField(
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
                 border: const OutlineInputBorder(),
-                prefixIcon: Padding(
-                  padding: const EdgeInsets.only(left: 8.0, right: 6.0),
-                ),
               ),
               validator: (v) =>
                   (v == null || v.trim().isEmpty) ? 'Email' : null,
+            ),
+            const SizedBox(height: 24),
+            TextFormField(
+              keyboardType: TextInputType.visiblePassword,
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+              ),
+              validator: (v) =>
+                  (v == null || v.trim().isEmpty) ? 'Password' : null,
             ),
             const SizedBox(height: 24),
             TextFormField(
