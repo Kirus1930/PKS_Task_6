@@ -23,6 +23,7 @@ class CreateAccountScreen extends StatelessWidget {
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
                 border: const OutlineInputBorder(),
+                labelText: 'Email',
               ),
               validator: (v) =>
                   (v == null || v.trim().isEmpty) ? 'Email' : null,
