@@ -33,6 +33,18 @@ class AppState extends ChangeNotifier {
         subtitle: 'UV protection',
         price: 49.99,
         image: 'assets/images/product4.png'),
+    Product(
+        id: 'p5',
+        title: 'Lorem iprum',
+        subtitle: 'Lorem iprum kognace dominus',
+        price: 7.99,
+        image: 'assets/images/product5.png'),
+    Product(
+        id: 'p6',
+        title: 'The Product',
+        subtitle: 'This is very useful product. Just buy it!',
+        price: 99.99,
+        image: 'assets/images/product6.png'),
   ];
 
   final List<CartItem> _cart = [];

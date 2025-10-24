@@ -57,33 +57,29 @@ class ProductCard extends StatelessWidget {
               child: GestureDetector(
                 onTap: () => appState.toggleFavorite(product.id),
                 child: Container(
-                  padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                      color: Colors.black38, shape: BoxShape.circle),
-                  child: Icon(
-                    Icons.favorite,
-                    size: 18,
-                    color: product.favorite ? Colors.red : Colors.white,
-                  ),
-                ),
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                        color: Colors.black38, shape: BoxShape.circle),
+                    child: Image.asset('assets/images/heart.png',
+                        width: 20,
+                        height: 20,
+                        color: product.favorite ? Colors.red : Colors.white)),
               ),
             ),
             // Bag bottom-left
             Positioned(
-              bottom: 48,
+              bottom: 90,
               left: 8,
               child: GestureDetector(
                 onTap: () => appState.toggleCart(product.id),
                 child: Container(
-                  padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                      color: Colors.black38, shape: BoxShape.circle),
-                  child: Icon(
-                    Icons.shopping_bag,
-                    size: 18,
-                    color: product.inCart ? Colors.black : Colors.white,
-                  ),
-                ),
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                        color: Colors.black38, shape: BoxShape.circle),
+                    child: Image.asset('assets/images/bag.png',
+                        width: 20,
+                        height: 20,
+                        color: product.inCart ? Colors.black : Colors.white)),
               ),
             ),
           ],
