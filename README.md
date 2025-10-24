@@ -13,7 +13,9 @@
 ![](enter_password.png)
 
 **4. Магазин**
-![](shop.png)
+![](shop_1.png)
+
+![](shop_2.png)
 
 **5. Избранное**
 ![](favorites.png)
