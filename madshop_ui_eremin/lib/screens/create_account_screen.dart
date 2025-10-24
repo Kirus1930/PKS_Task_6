@@ -19,11 +19,10 @@ class CreateAccountScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const SizedBox(height: 24),
-            const Text('Phone', style: TextStyle(fontSize: 16)),
+            const Text('Email', style: TextStyle(fontSize: 16)),
             const SizedBox(height: 8),
             TextField(
-              controller: phoneController,
-              keyboardType: TextInputType.phone,
+              keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
                 border: const OutlineInputBorder(),
                 prefixIcon: Padding(
