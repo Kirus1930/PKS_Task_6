@@ -19,9 +19,7 @@ class CreateAccountScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const SizedBox(height: 24),
-            const Text('Email', style: TextStyle(fontSize: 16)),
-            const SizedBox(height: 8),
-            TextField(
+            TextFormField(
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
                 border: const OutlineInputBorder(),
@@ -40,8 +38,10 @@ class CreateAccountScreen extends StatelessWidget {
                   ),
                 ),
               ),
+              validator: (v) =>
+                  (v == null || v.trim().isEmpty) ? 'Email' : null,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 24),
             TextField(
               controller: phoneController,
               keyboardType: TextInputType.phone,
@@ -52,10 +52,8 @@ class CreateAccountScreen extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // A small flag (use an asset or emoji). This is used instead of "+7".
-                      // To replace with exported flag from Figma, put flag image into assets/images/flag_ru.png
-                      // and replace Text('🇷🇺') below with Image.asset('assets/images/flag_ru.png', width:20,height:14)
-                      const Text('🇷🇺', style: TextStyle(fontSize: 20)),
+                      Image.asset('assets/images/flag_ru.png',
+                          width: 20, height: 14),
                       const SizedBox(width: 6),
                       const Text('|', style: TextStyle(color: Colors.grey)),
                     ],
