@@ -25,17 +25,14 @@ class CreateAccountScreen extends StatelessWidget {
                 border: const OutlineInputBorder(),
                 labelText: 'Email',
               ),
-              validator: (v) =>
-                  (v == null || v.trim().isEmpty) ? 'Email' : null,
             ),
             const SizedBox(height: 24),
             TextFormField(
               keyboardType: TextInputType.visiblePassword,
               decoration: InputDecoration(
                 border: const OutlineInputBorder(),
+                labelText: 'Password',
               ),
-              validator: (v) =>
-                  (v == null || v.trim().isEmpty) ? 'Password' : null,
             ),
             const SizedBox(height: 24),
             TextFormField(
@@ -43,6 +40,7 @@ class CreateAccountScreen extends StatelessWidget {
               keyboardType: TextInputType.phone,
               decoration: InputDecoration(
                 border: const OutlineInputBorder(),
+                labelText: 'Your number',
                 prefixIcon: Padding(
                   padding: const EdgeInsets.only(left: 8.0, right: 6.0),
                   child: Row(
@@ -56,8 +54,6 @@ class CreateAccountScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              validator: (v) =>
-                  (v == null || v.trim().isEmpty) ? 'Your number' : null,
             ),
             const SizedBox(height: 24),
             ElevatedButton(
