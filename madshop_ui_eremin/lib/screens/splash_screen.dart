@@ -31,8 +31,6 @@ class _SplashScreenState extends State<SplashScreen> {
             // Replace 'assets/images/logo.png' with the exported logo from Figma
             Image.asset('assets/images/logo.png', width: 160, height: 160),
             const SizedBox(height: 12),
-            const Text('01 Start',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           ],
         ),
       ),
