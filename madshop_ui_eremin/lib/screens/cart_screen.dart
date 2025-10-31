@@ -132,7 +132,7 @@ class _CartScreenState extends State<CartScreen> {
         ),
       ),
 
-      // --- Нижнее меню навигации ---
+      // --- Навигационное меню ---
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
