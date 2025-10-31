@@ -2,9 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/app_state.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   static const routeName = '/cart';
   const CartScreen({Key? key}) : super(key: key);
+
+  @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  int _selectedIndex = 2;
+
+  void _onItemTapped(int index) {
+    setState(() => _selectedIndex = index);
+    switch (index) {
+      case 0:
+        Navigator.of(context).pushReplacementNamed('/shop');
+        break;
+      case 1:
+        Navigator.of(context).pushReplacementNamed('/favorites');
+        break;
+      case 2:
+        Navigator.of(context).pushReplacementNamed('/cart');
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,17 +35,20 @@ class CartScreen extends StatelessWidget {
       appBar: AppBar(
         title: Row(
           children: [
-            const Text('Cart'),
+            const Text('Cart', style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(width: 8),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(12)),
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(12),
+              ),
               child: Text('${appState.totalItemsInCart} items'),
-            )
+            ),
           ],
         ),
+        backgroundColor: Colors.white,
+        elevation: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
@@ -50,10 +75,11 @@ class CartScreen extends StatelessWidget {
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold)),
                                 Text(
-                                    '\$${item.product.price.toStringAsFixed(2)}')
+                                    '\$${item.product.price.toStringAsFixed(2)}'),
                               ],
                             ),
                           ),
+                          // --- Кнопки изменения количества и удаления ---
                           Row(
                             children: [
                               IconButton(
@@ -66,8 +92,15 @@ class CartScreen extends StatelessWidget {
                                   onPressed: () =>
                                       appState.changeQty(item.product.id, 1),
                                   icon: const Icon(Icons.add)),
+                              IconButton(
+                                onPressed: () => appState
+                                    .toggleCart(item.product.id, force: false),
+                                icon: const Icon(Icons.delete_outline,
+                                    color: Colors.redAccent),
+                                tooltip: 'Remove item',
+                              ),
                             ],
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -89,11 +122,41 @@ class CartScreen extends StatelessWidget {
                             fontSize: 18, fontWeight: FontWeight.bold)),
                   ],
                 ),
-                ElevatedButton(onPressed: () {}, child: const Text('Checkout'))
+                ElevatedButton(
+                  onPressed: () {},
+                  child: const Text('Checkout'),
+                ),
               ],
-            )
+            ),
           ],
         ),
+      ),
+
+      // --- Нижнее меню навигации ---
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        elevation: 8,
+        backgroundColor: Colors.white,
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.blueAccent,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        type: BottomNavigationBarType.fixed,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite_outline),
+            label: 'Favorites',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_bag_outlined),
+            label: 'Cart',
+          ),
+        ],
       ),
     );
   }
