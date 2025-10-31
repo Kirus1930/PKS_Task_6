@@ -88,3 +88,70 @@ class ProductCard extends StatelessWidget {
     );
   }
 }
+
+/// Вариант карточки без иконки корзины
+class ProductCardNoCart extends StatelessWidget {
+  final product;
+  const ProductCardNoCart({Key? key, required this.product}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final appState = Provider.of<AppState>(context, listen: false);
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 6)],
+      ),
+      child: Stack(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: ClipRRect(
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(12)),
+                  child: product.image.isNotEmpty
+                      ? Image.asset(product.image, fit: BoxFit.cover)
+                      : Container(color: Colors.grey[300]),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(product.title,
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 4),
+                    Text(product.subtitle,
+                        style: const TextStyle(fontSize: 12)),
+                    const SizedBox(height: 6),
+                    Text('\$${product.price.toStringAsFixed(2)}',
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              )
+            ],
+          ),
+          Positioned(
+            top: 8,
+            left: 8,
+            child: GestureDetector(
+              onTap: () => appState.toggleFavorite(product.id),
+              child: Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                      color: Colors.black38, shape: BoxShape.circle),
+                  child: Image.asset('assets/images/heart.png',
+                      width: 20,
+                      height: 20,
+                      color: product.favorite ? Colors.red : Colors.white)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
