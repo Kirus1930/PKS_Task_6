@@ -54,14 +54,14 @@ class _ShopScreenState extends State<ShopScreen> {
         ),
       ),
 
-      // --- Добавляем нижнее меню ---
+      // --- Навигационное меню ---
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         elevation: 8,
         backgroundColor: Colors.white,
-        selectedItemColor: Colors.blueAccent,
-        unselectedItemColor: Colors.grey,
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.blueAccent,
         showSelectedLabels: false,
         showUnselectedLabels: false,
         type: BottomNavigationBarType.fixed,
